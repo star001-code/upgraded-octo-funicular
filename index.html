@@ -1,45 +1,153 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<title>الكمارك العراقية — الحاسبة و الجدول</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>📦 الكمارك العراقية — الحاسبة والجدول</title>
 <style>
-  body{font-family:Arial,"Noto Naskh Arabic",sans-serif;background:#0f172a;color:#e5e7eb;margin:0}
-  header{background:#111827;padding:20px;text-align:center;border-bottom:2px solid #1f2937}
-  header h1{margin:0;font-size:24px}
-  main{max-width:800px;margin:40px auto;padding:20px}
-  .card{background:#111827;border:1px solid #1f2937;border-radius:14px;padding:20px;margin-bottom:20px;text-align:center}
-  h2{margin-top:0}
-  a.button{display:inline-block;margin-top:10px;padding:12px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px}
-  a.button:hover{background:#3b82f6}
-  footer{background:#0b1220;text-align:center;padding:10px;font-size:13px;color:#94a3b8;border-top:1px solid #1f2937}
+  :root{
+    --bg:#071026;
+    --card:#07192b;
+    --muted:#9fb0c8;
+    --accent:#5eead4;
+    --primary:#60a5fa;
+    --glass: rgba(255,255,255,0.03);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: Inter, "Noto Naskh Arabic", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#041226 0%, #071330 60%);
+    color:#e6f0fb;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:28px;
+    direction:rtl;
+  }
+  .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:20px}
+  header.site{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);
+    padding:18px;
+    border-radius:var(--radius);
+    box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+  }
+  .logo{
+    width:64px;height:64px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--primary),#7c3aed);
+    color:white;font-weight:700;font-size:20px;
+    flex:0 0 64px;
+  }
+  header .title{line-height:1}
+  header h1{margin:0;font-size:18px}
+  header p{margin:2px 0 0;color:var(--muted);font-size:14px}
+  .hero{
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+    padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+    display:flex;gap:18px;align-items:center;flex-wrap:wrap;
+  }
+  .hero .intro{flex:1}
+  .hero h2{margin:0 0 8px;font-size:20px}
+  .hero p{margin:0;color:var(--muted)}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+    color:#041226;background:linear-gradient(90deg,var(--accent),#7dd3fc);text-decoration:none;
+    font-weight:600;border:none;cursor:pointer;
+  }
+  .btn.ghost{
+    background:transparent;color:var(--accent);border:1px solid rgba(94,234,212,0.12);
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .card{
+    background:var(--card);
+    padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
+    display:flex;flex-direction:column;gap:12px;min-height:140px;
+  }
+  .card .meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .card h3{margin:0;font-size:16px}
+  .card p{margin:0;color:var(--muted);font-size:13px}
+  .card .cta{margin-top:auto;display:flex;gap:8px}
+  .pill{background:var(--glass);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:12px;border:1px solid rgba(255,255,255,0.02)}
+  footer{margin-top:6px;padding:16px;border-radius:12px;text-align:center;color:var(--muted);font-size:13px;background:transparent}
+  .kbd{background:#07192b;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);font-weight:600;color:var(--muted);font-size:13px}
+  @media (max-width:620px){
+    header.site{flex-direction:row;gap:12px}
+    .logo{width:56px;height:56px}
+    .hero{padding:14px}
+  }
 </style>
 </head>
 <body>
-<header>
-  <h1>📦 الكمارك العراقية</h1>
-  <p>حاسبة و جدول المنتجات (GDS_MIN / GDS_MAX / GDS_YER)</p>
-</header>
-<main>
-  <div class="card">
-    <h2>📊 جدول المنتجات</h2>
-    <p>تصفح جميع المنتجات، وابحث بسرعة عن GDS_MIN و GDS_MAX و GDS_YER.</p>
-    <a href="products-table.html" class="button">افتح الجدول</a>
-  </div>
-  <div class="card">
-    <h2>🔎 الحاسبة</h2>
-    <p>ابحث عن منتج محدد، وأدخل الوزن وسعر الصرف والنسبة لتحسب فرق الرسم بالدينار.</p>
-    <a href="product-search.html" class="button">افتح الحاسبة</a>
-  </div>
-  <div class="card">
-    <h2>📂 النسخة الأوفلاين (Self-Contained)</h2>
-    <p>ملف واحد يحتوي الجدول + الحاسبة + البيانات (أنت تلصق JSON بالداخل).</p>
-    <a href="customs-offline.html" class="button">افتح النسخة الأوفلاين</a>
-  </div>
+<main class="wrap">
+  <header class="site" role="banner">
+    <div class="logo" aria-hidden="true">⚖️</div>
+    <div class="title">
+      <h1>الكمارك العراقية</h1>
+      <p>حاسبة وجدول المنتجات (GDS_MIN / GDS_MAX / GDS_YER) — خفيفة وسريعة</p>
+    </div>
+    <div style="margin-left:auto;text-align:left">
+      <div class="pill">نسخة: محليّة</div>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="intro">
+      <h2 id="hero-title">ابحث، احسب واطّلع على تفاصيل كل منتج بسرعة</h2>
+      <p>استخدم الجدول لاستعراض كل المنتجات، أو افتح الحاسبة لإدخال الوزن وسعر الصرف والنسبة لحساب فرق الرسم بالدينار العراقي.</p>
+
+      <div class="actions">
+        <a class="btn" href="products-table.html" title="فتح الجدول">📊 افتح الجدول</a>
+        <a class="btn" href="product-search.html" title="فتح الحاسبة">🔎 افتح الحاسبة</a>
+        <a class="btn ghost" href="customs-offline.html" title="النسخة الأوفلاين">📂 نسخة أوفلاين</a>
+      </div>
+    </div>
+
+    <div style="width:220px;min-width:160px">
+      <div style="background:linear-gradient(135deg,#08203a,#042b3d);padding:12px;border-radius:10px;text-align:center">
+        <div style="font-size:36px">📦</div>
+        <div style="margin-top:8px;color:var(--muted)">عدد المنتجات<br><strong style="font-size:18px">من الملف: products.json</strong></div>
+        <div style="margin-top:10px"><span class="kbd">إرفع JSON</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="features" class="grid">
+    <article class="card" aria-labelledby="f1">
+      <div class="meta"><h3 id="f1">📂 جدول منتجات قابل للبحث</h3><span class="pill">تصفّح سريع</span></div>
+      <p>عرض GDS_MIN و GDS_MAX و GDS_YER لكل منتج. اضغط اسم المنتج لفتح الحاسبة مع تعبئة الاسم تلقائياً.</p>
+      <div class="cta">
+        <a class="btn" href="products-table.html">افتح الجدول</a>
+      </div>
+    </article>
+
+    <article class="card" aria-labelledby="f2">
+      <div class="meta"><h3 id="f2">🔎 حاسبة الفروقات</h3><span class="pill">حساب مباشر</span></div>
+      <p>ابحث عن المنتج، أدخل الوزن وسعر الصرف والنسبة لتحصل على قيمة الفرق بالدينار فورًا.</p>
+      <div class="cta">
+        <a class="btn" href="product-search.html">افتح الحاسبة</a>
+      </div>
+    </article>
+
+    <article class="card" aria-labelledby="f3">
+      <div class="meta"><h3 id="f3">📦 نسخة أوفلاين</h3><span class="pill">ملف واحد</span></div>
+      <p>صفحة واحدة تحتوي الجدول والحاسبة والبيانات مضمنة — استخدمها بدون اتصال أو لاستضافة ثابتة.</p>
+      <div class="cta">
+        <a class="btn ghost" href="customs-offline.html">افتح الأوفلاين</a>
+      </div>
+    </article>
+
+  </section>
+
+  <footer>
+    ⚖️ مشروع تجريبي — يعمل محليًا وعلى GitHub Pages. الروابط الآن تشير للأسماء المصححة: products-table.html, product-search.html, customs-offline.html
+  </footer>
 </main>
-<footer>
-  ⚖️ مشروع تجريبي — يشتغل محليًا أو على GitHub Pages
-</footer>
 </body>
 </html>
