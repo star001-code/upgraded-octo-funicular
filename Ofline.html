@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>📦 الكمارك — أوفلاين (جدول + حاسبة)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{font-family:Arial,"Noto Naskh Arabic",sans-serif;background:#0f172a;color:#e5e7eb;margin:0;padding:20px}
+  .card{background:#111827;border:1px solid #1f2937;border-radius:14px;padding:20px;margin:auto;max-width:1200px;margin-bottom:20px}
+  h1,h2{margin-top:0}
+  input,button{padding:10px;border-radius:8px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
+  button{background:#2563eb;cursor:pointer}
+  table{width:100%;border-collapse:collapse;margin-top:14px}
+  th,td{border-bottom:1px solid #1f2937;padding:8px;text-align:center}
+  th{background:#0b1220}
+  td:first-child{text-align:right}
+  .pill{background:#0b1220;border:1px solid #334155;border-radius:999px;padding:6px 10px;font-size:12px;color:#94a3b8;margin-left:5px}
+  .result{margin-top:14px;padding:14px;border-radius:12px;background:#0b1220;line-height:1.8}
+  .kv{display:grid;grid-template-columns:1fr auto;gap:8px;padding:6px 0;border-bottom:1px solid #1f2937}
+  .hidden{display:none}
+  .grid{display:grid;grid-template-columns: 1fr auto; gap:10px; align-items:center}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>📊 جدول المنتجات (GDS_MIN / GDS_MAX / GDS_YER)</h1>
+  <div class="grid">
+    <input id="q" type="text" placeholder="ابحث باسم المنتج..." oninput="filter()">
+    <span id="count" class="pill">—</span>
+  </div>
+  <table id="tbl">
+    <thead><tr><th>المنتج</th><th>GDS_MIN</th><th>GDS_MAX</th><th>GDS_YER</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="card hidden" id="calcCard">
+  <h2>🔎 تفاصيل المنتج + حساب فرق الرسم</h2>
+  <div id="prodInfo"></div>
+  <label>وزن الحمل (كغ)</label>
+  <input id="weight" type="number" placeholder="مثال: 5000"><br><br>
+  <label>سعر الصرف (دينار لكل دولار)</label>
+  <input id="exchangeRate" type="number" value="1320"><br><br>
+  <label>النسبة (%)</label>
+  <input id="rate" type="number" value="6" step="0.1"><br><br>
+  <button onclick="calc()">احسب</button>
+  <div id="result" class="result hidden"></div>
+</div>
+
+<script>
+let DB=[], VIEW=[], currentProduct=null;
+const normalize=s=>(s||'').toString().trim().replace(/\s+/g,' ').toLowerCase();
+const fmt=x=>{const n=Number(x);return isFinite(n)?n.toLocaleString('ar-IQ',{maximumFractionDigits:2}):'-';};
+
+function prepare(arr){
+  return arr.map(r=>{
+    const product=r.product ?? r.GDS_DS2 ?? r.name ?? "";
+    const min=Number(r.GDS_MIN), max=Number(r.GDS_MAX);
+    const yer=(r.GDS_YER!=null && r.GDS_YER!=="")?Number(r.GDS_YER):(isFinite(min)&&isFinite(max)?(min+max)/2:null);
+    return {product,GDS_MIN:min,GDS_MAX:max,GDS_YER:yer};
+  }).filter(r=>r.product);
+}
+
+function render(){
+  const tb=document.querySelector('#tbl tbody'); tb.innerHTML='';
+  VIEW.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><a href="#" onclick="openCalc('${r.product.replace(/'/g,"\\'")}')">${r.product}</a></td>
+      <td>${fmt(r.GDS_MIN)}</td>
+      <td>${fmt(r.GDS_MAX)}</td>
+      <td><b>${fmt(r.GDS_YER)}</b></td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('count').textContent=`عدد النتائج: ${VIEW.length.toLocaleString('ar-IQ')} من ${DB.length.toLocaleString('ar-IQ')}`;
+}
+
+function filter(){
+  const q=normalize(document.getElementById('q').value);
+  VIEW = !q ? DB.slice() : DB.filter(r=>normalize(r.product).includes(q));
+  render();
+}
+
+function openCalc(name){
+  currentProduct = DB.find(r=>r.product===name);
+  if(!currentProduct) return;
+  document.getElementById('calcCard').classList.remove('hidden');
+  document.getElementById('prodInfo').innerHTML=`
+    <div class="kv"><div>🏷️ المنتج</div><div><b>${currentProduct.product}</b></div></div>
+    <div class="kv"><div>GDS_MIN</div><div>${fmt(currentProduct.GDS_MIN)}</div></div>
+    <div class="kv"><div>GDS_MAX</div><div>${fmt(currentProduct.GDS_MAX)}</div></div>
+    <div class="kv"><div>💰 GDS_YER</div><div><b>${fmt(currentProduct.GDS_YER)}</b></div></div>`;
+  document.getElementById('result').classList.add('hidden');
+}
+
+function calc(){
+  if(!currentProduct) return;
+  const w=parseFloat(document.getElementById('weight').value);
+  const ex=parseFloat(document.getElementById('exchangeRate').value);
+  const rate=parseFloat(document.getElementById('rate').value);
+  if(isNaN(w)||w<=0){ alert("⚠️ أدخل وزن صحيح"); return; }
+  const diff = w * Number(currentProduct.GDS_YER) * ex * (rate/100);
+  const res=document.getElementById('result'); res.classList.remove('hidden');
+  res.innerHTML=`
+    <div class="kv"><div>⚖️ الوزن (كغ)</div><div>${fmt(w)}</div></div>
+    <div class="kv"><div>سعر الصرف</div><div>${fmt(ex)}</div></div>
+    <div class="kv"><div>النسبة</div><div>${rate}%</div></div>
+    <div class="kv"><div>✅ فرق الرسم (دينار)</div><div><b>${fmt(diff)}</b></div></div>`;
+}
+
+// تحميل البيانات المضمنة
+try{
+  const raw = document.getElementById('db-inline').textContent.trim();
+  DB = prepare(JSON.parse(raw)); VIEW = DB.slice(); render();
+}catch(e){
+  alert("⚠️ الصق بيانات JSON داخل الوسم db-inline في أسفل الصفحة.");
+}
+</script>
+
+<!-- الصق هنا محتوى products.json الكامل (3964 منتج) بدل العيّنة -->
+<script id="db-inline" type="application/json">
+[
+  { "product": "عجول", "GDS_MIN": 2, "GDS_MAX": 6, "GDS_YER": 4 },
+  { "product": "أغنام", "GDS_MIN": 4, "GDS_MAX": 6, "GDS_YER": 5 },
+  { "product": "أفراخ دجاج", "GDS_MIN": 0.75, "GDS_MAX": 1.25, "GDS_YER": 1 }
+]
+</script>
+</body>
+</html>
